@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookMyMealAPI", "BookMyMealAPI.csproj", "{8891CE3B-7A08-4AB2-861E-F4F68D1A805F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8891CE3B-7A08-4AB2-861E-F4F68D1A805F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8891CE3B-7A08-4AB2-861E-F4F68D1A805F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8891CE3B-7A08-4AB2-861E-F4F68D1A805F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8891CE3B-7A08-4AB2-861E-F4F68D1A805F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {47DEE49A-7ED6-4EC0-B57D-CA261DE8929B}
+	EndGlobalSection
+EndGlobal

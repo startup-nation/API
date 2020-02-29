@@ -84,7 +84,7 @@ namespace BookMyMealAPI.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim("Email",user.Id.ToString()),
+                        new Claim("Email",user.Email.ToString()),
                         new Claim(_options.ClaimsIdentity.RoleClaimType,role.FirstOrDefault())
                     }),
                     Expires = DateTime.UtcNow.AddDays(1),

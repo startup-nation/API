@@ -9,6 +9,7 @@ using BookMyMealAPI.Data;
 using BookMyMealAPI.Model.Entity;
 using BookMyMealAPI.Model.Request;
 using BookMyMealAPI.Model.Settings;
+using BookMyMealAPI.Services.Email;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -61,6 +62,15 @@ namespace BookMyMealAPI.Controllers
 
                 _context.Profile.Add(profile);
                 await _context.SaveChangesAsync();
+
+                if (result.Succeeded)
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(applicationUser);
+                    var callbackUrl = Url.Action(("ConfirmEmail"), "User", new { userId = applicationUser.Id, code = code }, Request.Scheme);
+
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.sendVerificationEmail(model.Email, callbackUrl);
+                }
                 return Ok(result);
             }
             catch (Exception ex)
@@ -78,6 +88,11 @@ namespace BookMyMealAPI.Controllers
             var user = await _userManager.FindByNameAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
+                
+                if (! await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    return BadRequest(new { message = "Email not Confirmed" });
+                }
                 var role = await _userManager.GetRolesAsync(user);
                 IdentityOptions _options = new IdentityOptions();
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -100,6 +115,26 @@ namespace BookMyMealAPI.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<Object> ConfirmEmailAsync(string userId,string code)
+        {
+            if(userId==null || code == null)
+            {
+                return BadRequest(new { message = "Somting is missing" });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { Message = "Verification Succeeded" });
+            }
+            else
+            {
+                return Ok(new { Message = "Verification Failed" });
+            }
+        }
 
     }
 }

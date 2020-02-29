@@ -40,6 +40,7 @@ namespace BookMyMealAPI
             services.AddIdentity<ApplicationUserModel, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 6;
+                options.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<APIDbContext>()
 
             .AddDefaultTokenProviders();
@@ -53,6 +54,7 @@ namespace BookMyMealAPI
             });
 
 
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -62,6 +64,31 @@ namespace BookMyMealAPI
                 options.Password.RequiredLength = 6;
             }
             );
+
+            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+
+            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x => {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = false;
+                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+
+
 
 
         }

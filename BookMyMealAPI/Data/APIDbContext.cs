@@ -16,6 +16,7 @@ namespace BookMyMealAPI.Data
         }
 
         public DbSet<ApplicationUserModel> applicationUsers { get; set; }
+        public DbSet<ProfileModel> Profile { get; set; }
 
     }
 }

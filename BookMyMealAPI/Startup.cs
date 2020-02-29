@@ -35,7 +35,7 @@ namespace BookMyMealAPI
         {
             services.AddDbContext<APIDbContext>(options =>
             options.UseSqlServer(
-                Configuration.GetConnectionString("OnlineDBTemp")));
+                Configuration.GetConnectionString("LocalSQLSERVER")));
 
             services.AddIdentity<ApplicationUserModel, IdentityRole>(options =>
             {
@@ -164,6 +164,8 @@ namespace BookMyMealAPI
 
             string UserPassword = Configuration.GetSection("UserSettings")["UserPassword"];
             var _user = await UserManager.FindByEmailAsync(Configuration.GetSection("UserSettings")["UserEmail"]);
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(poweruser);
+            var result = await UserManager.ConfirmEmailAsync(poweruser, code);
 
             if (_user == null)
             {

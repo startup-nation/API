@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BookMyMealAPI.Data;
 using BookMyMealAPI.Model.Entity;
+using BookMyMealAPI.Model.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace BookMyMealAPI
@@ -47,6 +51,19 @@ namespace BookMyMealAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookMyMeal API", Version = "v1" });
             });
+
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+            }
+            );
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +96,21 @@ namespace BookMyMealAPI
 
             CreateRoles(serviceProvider).Wait();
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {

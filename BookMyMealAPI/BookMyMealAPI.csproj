@@ -24,9 +24,5 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\Response\" />
-  </ItemGroup>
-
 
 </Project>

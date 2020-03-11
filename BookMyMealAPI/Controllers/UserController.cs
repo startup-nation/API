@@ -84,11 +84,11 @@ namespace BookMyMealAPI.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim("UserID",user.Id.ToString())
+                        new Claim("UserID",user.Id.ToString()),
                       //  new Claim("Email",user.Email.ToString()),
-                      //  new Claim(_options.ClaimsIdentity.RoleClaimType,role.FirstOrDefault())
+                        new Claim(_options.ClaimsIdentity.RoleClaimType,role.FirstOrDefault())
                     }),
-                    Expires = DateTime.UtcNow.AddDays(7),
+                    Expires = DateTime.UtcNow.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256)
                 };
                 var tokenHandler = new JwtSecurityTokenHandler();

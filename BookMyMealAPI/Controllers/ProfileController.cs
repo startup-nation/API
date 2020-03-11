@@ -4,11 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookMyMealAPI.Data;
 using BookMyMealAPI.Model.Entity;
+using BookMyMealAPI.Model.Request;
+using BookMyMealAPI.Model.Response;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookMyMealAPI.Controllers
 {
@@ -35,14 +38,62 @@ namespace BookMyMealAPI.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             var profile = await _context.Profile.FindAsync(user.Email);
 
-            return new
+            if (profile == null)
             {
-                profile.Email,
-                profile.Name,
-                profile.PhoneNumber
+                return NotFound();
+            }
+
+            ProfileResponseModel response = new ProfileResponseModel()
+            {
+                Email = profile.Email,
+                Name = profile.Name,
+                PhoneNumber = profile.PhoneNumber
             };
+
+            return response;
         }
 
-        
+
+        [HttpPost]
+        [Route("Update")]
+        [Authorize(Roles = "Customer")]
+        public async Task<Object> UpdatePofile(ProfileUpdateRequestModel updateRequestModel)
+        {
+            ProfileUpdateResponseModel responseModel = new ProfileUpdateResponseModel();
+            string userId = User.Claims.First(c => c.Type == "UserID").Value;
+            var user = await _userManager.FindByIdAsync(userId);
+            ProfileModel profile = await _context.Profile.FindAsync(user.Email);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            profile.Name = updateRequestModel.Name;
+            profile.PhoneNumber = updateRequestModel.PhoneNumber;
+            _context.Entry(profile).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                responseModel.IsSuccess = true;
+            }
+            catch (Exception)
+            {
+                responseModel.IsSuccess = false;
+                return responseModel;
+            }
+
+            responseModel.Profile = profile;
+
+            
+
+            return responseModel;
+        }
+
+
+
+
+
+
     }
 }

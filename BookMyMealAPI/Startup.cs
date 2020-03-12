@@ -129,6 +129,12 @@ namespace BookMyMealAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(options =>
+           options.WithOrigins("http://localhost:3000",
+                                "https://zihadtest.herokuapp.com",
+                                "https://bookmymealweb.herokuapp.com")
+           .AllowAnyHeader()
+           .AllowAnyMethod());
 
             app.UseSwagger();
 

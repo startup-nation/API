@@ -8,5 +8,6 @@ namespace BookMyMealAPI.Model.Entity
 {
     public class ApplicationUserModel: IdentityUser
     {
+        
     }
 }

@@ -38,8 +38,13 @@ namespace BookMyMealAPI.Controllers
 
         [HttpPost]
         [Route("Customer/Registration")]
-        public async Task<Object> Cu(CustomerRegistrationModel model)
+        public async Task<Object> CustomerRegistration(CustomerRegistrationModel model)
         {
+            if (_userManager.FindByEmailAsync(model.Email) != null)
+            {
+                return BadRequest(new { message = "User Already Exists" });
+            }
+
             var Role = "Customer";
             var applicationUser = new ApplicationUserModel()
             {
@@ -85,7 +90,7 @@ namespace BookMyMealAPI.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login(LoginRequestModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 
@@ -113,6 +118,81 @@ namespace BookMyMealAPI.Controllers
             }
             else
                 return BadRequest(new { message = "Username or password is incorrect." });
+        }
+
+
+        [HttpPost]
+        [Route("Restaurent/Registration")]
+        public async Task<Object> RestaurentRegistration(RestaurantRegistrationModel model)
+        {
+            var usr = await _userManager.FindByEmailAsync(model.OwnerEmail);
+            if ( usr!= null)
+            {
+                return BadRequest(new { message = usr.Email+"User Already Exists" });
+            }
+
+            var Role = "RestaurantOwner";
+            var applicationUser = new ApplicationUserModel()
+            {
+                UserName = model.OwnerEmail,
+                Email = model.OwnerEmail
+            };
+
+            ProfileModel profile = new ProfileModel()
+            {
+                Email = model.OwnerEmail,
+                Name = model.OwnerName,
+                PhoneNumber = model.OwnerPhoneNumber
+
+            };
+
+            RestaurentModel restaurent = new RestaurentModel()
+            {
+                OwnerEmail = model.OwnerEmail,
+                RestaurantEmail = model.RestaurantEmail,
+                Phone = model.RestaurantPhone,
+                Name = model.RestaurantName,
+                Location = model.ResturantAddress
+
+            };
+
+            try
+            {
+                var result = await _userManager.CreateAsync(applicationUser, model.Password);
+                await _userManager.AddToRoleAsync(applicationUser, Role);
+
+                _context.Profile.Add(profile);
+                _context.Restaurent.Add(restaurent);
+                await _context.SaveChangesAsync();
+
+                var resturantID = _context.Restaurent.Where(r => r.OwnerEmail == model.OwnerEmail).FirstOrDefault().ID;
+
+                RestaurentRequestModel restaurentRequest = new RestaurentRequestModel()
+                {
+                    IsVerified = false,
+                    RegistrationDateTime = DateTime.Now,
+                    RestaurentID=resturantID
+                    
+                };
+
+                _context.RestaurentRequest.Add(restaurentRequest);
+                await _context.SaveChangesAsync();
+
+                if (result.Succeeded)
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(applicationUser);
+                    var callbackUrl = Url.Action(("ConfirmEmail"), "User", new { userId = applicationUser.Id, code = code }, Request.Scheme);
+
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.sendVerificationEmail(model.OwnerEmail, callbackUrl);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
 

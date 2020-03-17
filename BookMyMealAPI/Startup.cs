@@ -35,7 +35,7 @@ namespace BookMyMealAPI
         {
             services.AddDbContext<APIDbContext>(options =>
             options.UseSqlServer(
-                Configuration.GetConnectionString("OnlineDBTemp")));
+                Configuration.GetConnectionString("LocalSQLSERVER")));
             //OnlineDBTemp LocalSQLSERVER
             services.AddIdentity<ApplicationUserModel, IdentityRole>(options =>
             {

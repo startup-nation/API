@@ -40,7 +40,8 @@ namespace BookMyMealAPI.Controllers
         [Route("Customer/Registration")]
         public async Task<Object> CustomerRegistration(CustomerRegistrationModel model)
         {
-            if (_userManager.FindByEmailAsync(model.Email) != null)
+            var usr = await _userManager.FindByEmailAsync(model.Email);
+            if (usr != null)
             {
                 return BadRequest(new { message = "User Already Exists" });
             }
@@ -128,7 +129,7 @@ namespace BookMyMealAPI.Controllers
             var usr = await _userManager.FindByEmailAsync(model.OwnerEmail);
             if ( usr!= null)
             {
-                return BadRequest(new { message = usr.Email+"User Already Exists" });
+                return BadRequest(new { message = "User Already Exists" });
             }
 
             var Role = "RestaurantOwner";

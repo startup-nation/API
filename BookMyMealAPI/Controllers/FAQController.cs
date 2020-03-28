@@ -18,11 +18,11 @@ namespace BookMyMealAPI.Controllers
     [ApiController]
     
     [Produces("application/json")]
-    public class FAQModelsController : ControllerBase
+    public class FAQController : ControllerBase
     {
         private readonly APIDbContext _context;
 
-        public FAQModelsController(APIDbContext context)
+        public FAQController(APIDbContext context)
         {
             _context = context;
         }

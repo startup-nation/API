@@ -22,5 +22,7 @@ namespace BookMyMealAPI.Data
 
         public DbSet<RestaurentRequestModel> RestaurentRequest { get; set; }
 
+        public DbSet<FAQModel>  fAQModels { get; set; }
+
     }
 }

@@ -31,7 +31,9 @@ namespace BookMyMealAPI.Controllers
         }
 
 
-
+        /// <summary>
+        /// Can be access by Admin
+        /// </summary>
         [HttpGet]
         [Route("Admin/GetAllRestaurentRequest")]
         
@@ -42,6 +44,9 @@ namespace BookMyMealAPI.Controllers
         }
 
 
+        /// <summary>
+        /// Can be access by Admin
+        /// </summary>
         [HttpPost]
         [Route("Admin/UpdateResaurentRequest")]
         public async Task<Object> UpdatePofile(UpdateRestaurentRequestModel updateRestaurentRequest)

@@ -30,8 +30,11 @@ namespace BookMyMealAPI.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Can be access by Customer or RestaurantOwner
+        /// </summary>
         [HttpGet]
-        [Authorize(Roles ="Customer")]
+        [Authorize(Roles = "Customer,RestaurantOwner")]
         public async Task<Object> GetUserProfile()
         {
             string userId = User.Claims.First(c => c.Type == "UserID").Value;
@@ -53,10 +56,12 @@ namespace BookMyMealAPI.Controllers
             return response;
         }
 
-
+        /// <summary>
+        /// Can be access by  Customer or RestaurantOwner
+        /// </summary>
         [HttpPost]
         [Route("Update")]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer,RestaurantOwner")]
         public async Task<Object> UpdatePofile(ProfileUpdateRequestModel updateRequestModel)
         {
             ProfileUpdateResponseModel responseModel = new ProfileUpdateResponseModel();

@@ -36,6 +36,9 @@ namespace BookMyMealAPI.Controllers
         }
 
 
+        /// <summary>
+        /// Can be access by Unauthorize users
+        /// </summary>
         [HttpPost]
         [Route("Customer/Registration")]
         public async Task<Object> CustomerRegistration(CustomerRegistrationModel model)
@@ -86,7 +89,9 @@ namespace BookMyMealAPI.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Can be access by Unauthorizeduser
+        /// </summary>
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login(LoginRequestModel model)
@@ -122,6 +127,9 @@ namespace BookMyMealAPI.Controllers
         }
 
 
+        /// <summary>
+        /// Can be access by Unauthorized users     
+        /// </summary>
         [HttpPost]
         [Route("Restaurent/Registration")]
         public async Task<Object> RestaurentRegistration(RestaurantRegistrationModel model)
@@ -197,6 +205,9 @@ namespace BookMyMealAPI.Controllers
         }
 
 
+        /// <summary>
+        /// Can be access by Unauthorized users. This feature is used to verify email address
+        /// </summary>
         [HttpGet]
         public async Task<Object> ConfirmEmailAsync(string userId,string code)
         {
